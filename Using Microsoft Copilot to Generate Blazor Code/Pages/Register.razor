@@ -1,0 +1,39 @@
+@page "/register"
+@inject NavigationManager navManager
+@inject UserSessionService userService
+
+<h3>Registrazione</h3>
+
+<EditForm Model="newUser" OnValidSubmit="HandleValidSubmit" class="register-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input id="username" class="form-control" @bind="newUser.Username" placeholder="Inserisci il tuo username" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input id="email" type="email" class="form-control" @bind="newUser.Email" placeholder="Inserisci la tua email" />
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input id="password" type="password" class="form-control" @bind="newUser.Password" placeholder="Inserisci la tua password" />
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Registrati</button>
+    </div>
+</EditForm>
+
+@code {
+    private User newUser { get; set; } = new User();
+
+    private async Task HandleValidSubmit()
+    {
+        userService.RegisterUser(newUser);
+        navManager.NavigateTo("/events-list");
+    }
+}

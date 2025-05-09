@@ -1,0 +1,51 @@
+﻿@page "/add-event"
+@inject EventApp.EventServices service
+@inject NavigationManager navManager
+
+<h3>Crea un Nuovo Evento</h3>
+
+<EditForm Model="newEvent" OnValidSubmit="HandleValidSubmit" class="edit-event-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="eventName">Nome Evento:</label>
+        <input id="eventName" class="form-control" @bind="newEvent.EventName" placeholder="Inserisci il nome dell'evento" />
+    </div>
+
+    <div class="form-group">
+        <label for="eventDate">Data Evento:</label>
+        <input id="eventDate" type="date" class="form-control" @bind="newEvent.EventDate" />
+    </div>
+
+    <div class="form-group">
+        <label for="location">Luogo:</label>
+        <input id="location" class="form-control" @bind="newEvent.Location" placeholder="Inserisci il luogo dell'evento" />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Descrizione:</label>
+        <textarea id="description" class="form-control" @bind="newEvent.Description" placeholder="Inserisci una descrizione dell'evento"></textarea>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+    </div>
+</EditForm>
+
+@code {
+    private EventApp.Event newEvent { get; set; } = new EventApp.Event();
+
+    private void HandleValidSubmit()
+    {
+        service.AddEvent(new EventApp.Event
+        {
+            EventName = newEvent.EventName,
+            EventDate = newEvent.EventDate,
+            Location = newEvent.Location,
+            Description = newEvent.Description
+        });
+
+        navManager.NavigateTo("/events-list");
+    }
+}

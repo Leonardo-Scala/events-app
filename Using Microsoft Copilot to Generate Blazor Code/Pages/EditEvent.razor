@@ -1,0 +1,58 @@
+﻿@page "/edit-event/{id:int}"
+@inject EventApp.EventServices service
+@inject NavigationManager navManager
+
+<EditForm Model="eventToEdit" OnValidSubmit="HandleValidSubmit" class="edit-event-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="eventName">Nome Evento:</label>
+        <input id="eventName" class="form-control" @bind="eventToEdit.EventName" placeholder="Inserisci il nome dell'evento" />
+    </div>
+
+    <div class="form-group">
+        <label for="eventDate">Data Evento:</label>
+        <input id="eventDate" type="date" class="form-control" @bind="eventToEdit.EventDate" />
+    </div>
+
+    <div class="form-group">
+        <label for="location">Luogo:</label>
+        <input id="location" class="form-control" @bind="eventToEdit.Location" placeholder="Inserisci il luogo dell'evento" />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Descrizione:</label>
+        <textarea id="description" class="form-control" @bind="eventToEdit.Description" placeholder="Inserisci una descrizione dell'evento"></textarea>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+        <a class="btn btn-secondary" href="/events-list">Annulla</a>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private EventApp.Event eventToEdit { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        eventToEdit = service.GetEventById(Id);
+    }
+
+    private void HandleValidSubmit()
+    {
+        service.UpdateEvent(new EventApp.Event
+        {
+            EventName = eventToEdit.EventName,
+            EventDate = eventToEdit.EventDate,
+            Location = eventToEdit.Location,
+            Description = eventToEdit.Description
+        });
+
+        navManager.NavigateTo("/events-list");
+    }
+}

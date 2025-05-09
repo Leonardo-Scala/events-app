@@ -1,0 +1,27 @@
+﻿@page "/events-list"
+@inject EventApp.EventServices service
+
+<h3>EventList</h3>
+
+@foreach (var evt in events)
+{
+    <EventCard Event="@evt" OnEventRemoved="HandleEventRemoved" />
+}
+
+<div class="create-event-container">
+    <NavLink href="/add-event" class="btn btn-primary">Crea nuovo evento</NavLink>
+</div>
+
+@code {
+    private List<EventApp.Event> events = new List<EventApp.Event>();
+
+    protected override void OnInitialized()
+    {
+        events = service.GetEvents();
+    }
+
+    private void HandleEventRemoved(EventApp.Event removedEvent)
+    {
+        events.Remove(removedEvent);
+    }
+}

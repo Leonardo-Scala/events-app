@@ -1,0 +1,45 @@
+﻿<div class="event-card">
+    <div class="event-header">
+        <h3 class="event-title">@Event.EventName</h3>
+        <p class="event-date">@Event.EventDate.ToString("dd MMMM yyyy")</p>
+    </div>
+    <div class="event-body">
+        <p><strong>Luogo:</strong> @Event.Location</p>
+        <p><strong>Descrizione:</strong> @Event.Description</p>
+        <p><strong>Partecipanti:</strong> @Event.Participants</p>
+    </div>
+    <div class="event-actions">
+        <a class="btn btn-primary" href="/edit-event/@Event.Id">
+            Apri
+        </a>
+
+        <button class="btn btn-danger" @onclick="RemoveEvent">
+            Rimuovi
+        </button>
+
+        <button class="btn btn-success" @onclick="ParticipateEvent">
+            Partecipo
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventApp.Event Event { get; set; } = new EventApp.Event();
+
+    [Parameter]
+    public EventCallback<EventApp.Event> OnEventRemoved { get; set; }
+
+    private async Task RemoveEvent()
+    {
+        if (OnEventRemoved.HasDelegate)
+        {
+            await OnEventRemoved.InvokeAsync(Event);
+        }
+    }
+
+    private void ParticipateEvent()
+    {
+        Event.Participants++;
+    }
+}
